@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>ITHS Viz</title>
+        <link href="bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
+        <script type="text/javascript" src="d3/d3.js"></script>
+        <script src="http://d3js.org/queue.v1.min.js"></script>
+        <script type="text/javascript" src="underscore.js"></script>
+        <script type="text/javascript" src="jquery.js"></script>
+        <script type="text/javascript" src="bootstrap.js"></script>
+    </head>
+    <style type="text/css">
+      
+      body {
+        font-family: Open Sans,Verdana,Arial,sans-serif;
+        font-size: 16px;
+      }
+        
+      .btn-group {
+        margin-left: 100px;
+      }
+        
+      .label {
+        font-family: Open Sans Light, sans-serif;
+        fill: DimGray;
+        font-size: 16px;
+      }
+    
+      .CenterWrapper { 
+        width: 1800px;
+        margin-left: auto;
+        margin-right: auto; 
+      }
+        
+      h1,h2,h4 {
+        font-family: Open Sans, sans-serif;
+      }
+        
+      #main-buttons {
+        width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+        
+      .svgTop {
+        border-top: 3px solid black;  
+        border-bottom: 3px solid black;
+        border-left: 3px solid black;
+      }
+    
+      .svgMain {
+        border-top: 3px solid black;  
+        border-bottom: 3px solid black;
+        border-right: 3px solid black;  
+        border-left: 3px solid black;           
+      }
+        
+      #color-buttons {
+        margin-left: 100px;
+        width: 150px;
+        height: 200px;
+        display: inline-block;  
+        float: left;
+      }
+        
+    </style>
+    <body>
+        
+        
+        <div class="CenterWrapper">
+            
+            <div id="title" style="margin-bottom: 20px">
+                <center><h1>Primary Care Patient Demographics</h1></center>
+                <center><h4 style = "color:DimGray; font-size:16px">Electronic Health Record Data from a NW clinic treating underserved patients</h4></center>
+            </div>    
+            
+            <div id="main-buttons">
+                <div class="btn-group" style= "width: 400px; margin-left: auto; margin-right: auto;" data-toggle="buttons"> <!--class="btn-group"-->
+
+                <label class="btn btn-primary active" id="All">
+                  <input type="radio" name="options"> Total
+                </label>
+
+                <label class="btn btn-primary" id="Gender">
+                  <input type="radio" name="options"> By Gender
+                </label>
+
+                <label class="btn btn-primary" id="Race">
+                  <input type="radio" name="options"> By Race
+                </label>
+
+                <label class="btn btn-primary" id="Ethnicity">
+                  <input type="radio" name="options"> By Ethnicity
+                </label>
+
+                <label class="btn btn-primary" id="Age_Group">
+                  <input type="radio" name="options"> By Age
+                </label>
+                    
+                </div>
+
+                <center><h4 style="font-size: 16px">< Sort by Demographic ></h4></center>
+
+                
+            </div>
+
+            <div id="color-buttons">
+                
+            <h4>Group by Color</h4>
+
+                <label class="btn_a " id="Gender">
+                  <input type="radio" name="options" checked="checked"> By Gender
+                </label>
+
+                <br>
+
+                <label class="btn_a " id="Race">
+                  <input type="radio" name="options"> By Race
+                </label>
+
+                <br>
+
+                <label class="btn_a " id="Ethnicity">
+                  <input type="radio" name="options"> By Ethnicity
+                </label>
+
+                <br>
+
+                <label class="btn_a " id="Age_Group">
+                  <input type="radio" name="options"> By Age
+                </label>
+
+            </div>
+        </div>
+
+        <hr>
+        
+        <script>
+      d3.csv('clinic.csv', function (error, data) {
+
+        var width = 880, height = 880;
+        var widthTop = 350, heightTop = 880; 
+        var rad = 3;
+          
+        var genderColor = ["#4169e1", "#ff69b4"];
+        var genderLabels = ["Male", "Female"];
+          
+        var raceColor = ["#377eb8", "#e41a1c", "#4daf4a", "#999999", "#ff7f00", "#f781bf"];
+        var raceLabels = ["White", "Asian", "Black", "Undefined", "American Indian or Alaska Native", "Native Hawaiian or Other Pacific Islander"];
+          
+        var ethnicityColor = ["#54278f", "#006d2c", "#999999"];
+        var ethnicityLabels = ["Not Hispanic or Latino", "Hispanic or Latino", "Undefined"];
+          
+        var ageColor = ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f" ]  
+        var ageLabels = ["0-12", "13-18", "19-25", "26-45", "46-64", "65+"];
+        
+        var countGender = _.countBy(data, function (d) {
+           return d.Gender; 
+        });
+          
+        var countRace = _.countBy(data, function (d) {
+           return d.Race.split(' ').join('_'); 
+        }); 
+          
+        var countEthnicity = _.countBy(data, function (d) {
+           return d.Ethnicity.split(' ').join('_'); 
+        });
+          
+        var age1 = 0,
+            age2 = 0,
+            age3 = 0,
+            age4 = 0,
+            age5 = 0,
+            age6 = 0;
+          
+        var svgTop = d3.select(".CenterWrapper").append("svg")
+            .attr("class", "svgTop")
+            .attr("width", widthTop)
+            .attr("height", heightTop);
+          
+        var svg = d3.select(".CenterWrapper").append("svg")
+            .attr("class", "svgMain")
+            .attr("width", width)
+            .attr("height", height);
+
+        for (var j = 0; j < data.length; j++) {
+          data[j].radius = (data[j].last_Year - data[j].first_Year)*0.6 + 2; // size depends on longevity at clinic
+          data[j].x = Math.random() * width;
+          data[j].y = Math.random() * height;
+          data[j].All = "All";
+          
+          if (data[j].Age <= 12) {
+            data[j].Age_Group = "0-12"; age1++;
+          } else if (data[j].Age <= 18 && data[j].Age > 12) {
+            data[j].Age_Group = "13-18"; age2++;
+          } else if (data[j].Age <= 25 && data[j].Age > 18) {
+            data[j].Age_Group = "19-25"; age3++;
+          } else if (data[j].Age <= 45 && data[j].Age > 25) {
+            data[j].Age_Group = "26-45"; age4++;
+          } else if (data[j].Age <= 64 && data[j].Age > 45) {
+            data[j].Age_Group = "46-64"; age5++;
+          } else {
+            data[j].Age_Group = "65+"; age6++;
+          }
+            
+          if (data[j].Gender === "M") {
+            data[j].Gender = "Male";
+          } else { 
+            data[j].Gender = "Female"; 
+          }
+            
+        }
+        
+        function sizeLegend() {
+            var circleSize = [];
+            var circleText = [1,5,10,15];
+            
+            circleSize[0] = 2;
+            
+            for (var i=1;i<4;i++) {
+                circleSize[i] = 0.6*i*5 + 2;   
+            }
+            
+            var circleSize = svgTop.selectAll(".cLegend")
+                .data(circleSize)
+                .enter().append("circle")
+                .attr("class", "cLegend")
+                .attr("cx", function(d,i) { return 120; })
+                .attr("cy", 78)
+                .attr("r", function(d) { return d; })
+                .attr("fill", "black");
+            
+            circleSize.transition().duration(1000).attr("cx", function(d,i) { return 120 + i*30; })
+            
+            svgTop.selectAll(".cLegendLabels")
+                .data(circleText)
+                .enter().append("text")
+                .attr("class", "cLegendLabels")
+                .attr("x", function(d,i) { return 125 + i*30; })
+                .attr("y", 58)
+                .attr("text-anchor", "middle")
+                .text(function (d) { return d });
+            
+            svgTop.append("text").text("Years seen at clinic")
+                                 .attr("text-anchor","middle")
+                                 .attr("font-size","18px").attr("x",175).attr("y",30);
+  
+        }
+        
+        var padding = rad;
+        var maxRadius = d3.max(_.pluck(data, 'radius'));
+
+        var getCenters = function (vname, size) {
+          var centers, map;
+          centers = _.uniq(_.pluck(data, vname)).map(function (d) {
+            return {name: d, value: 1};
+          });
+
+          map = d3.layout.pack().size(size);
+          map.nodes({children: centers});
+          return centers;
+        };
+
+        var nodes = svg.selectAll(".node")
+          .data(data);
+
+        nodes.enter().append("circle")
+          .attr("class", "node")
+          .attr("cx", function (d) { return d.x; })
+          .attr("cy", function (d) { return d.y; })
+          .attr("r", function (d) { return 1 })
+          .on("mouseover", function (d) { showPopover.call(this, d); })
+          .on("mouseout", function (d) { removePopovers(); })
+          .style("fill", function(d) {
+                            if(d.Gender === "Male") {
+                                return "#4169e1"
+                            } else { return "#ff69b4" }
+                        })
+        
+        nodes.transition().duration(2500)
+          .attr("r", function (d) { return d.radius; })
+
+        var force = d3.layout.force()
+                    .nodes(data)
+                    //.size([width,heigh])
+                    .charge([-15]);
+                        
+        draw('All');
+        //colorBin('Gender');
+        colorLegend('Gender');
+        sizeLegend();
+
+        $( ".btn" ).click(function() {
+          draw(this.id);
+        });
+          
+        $( ".btn_a" ).click(function() {
+          colorBin(this.id);   
+          colorLegend(this.id);
+        });
+          
+        function colorLegend(varname) {
+            svgTop.selectAll(".ColorLegend").remove();
+            svgTop.selectAll(".ColorText").remove();
+            svgTop.selectAll("#ColorLegendTitle").remove();
+            var colorData;
+            var colorLabel;
+            
+            if (varname === "Gender") {
+                colorData = genderColor;  
+                colorLabel = genderLabels;
+            } else if (varname === "Race") {
+                colorData = raceColor;  
+                colorLabel = raceLabels;
+            } else if (varname === "Ethnicity") {
+                colorData = ethnicityColor;
+                colorLabel = ethnicityLabels;
+            } else if (varname === "Age_Group") {
+                colorData = ageColor;
+                colorLabel = ageLabels;
+            } else if (varname === "Default") {
+                colorData = ["#000000"];
+                colorLabel = ["Patient"];
+            }
+                
+            var colorCircles = svgTop.selectAll(".ColorLegend")
+                  .data(colorData)
+                  .enter().append("circle")
+                  .attr("class", "ColorLegend")
+                  .attr("r", 10)
+                  .attr("cy", function(d,i) { return 180; })
+                  .attr("cx", 25)
+                  .attr("fill", function(d) { return d });
+            
+            colorCircles.transition().duration(500).attr("cy", function(d,i) { return 180 + i*30; })
+            
+            var colorText = svgTop.selectAll(".ColorText")
+                  .data(colorLabel)
+                  .enter().append("text")
+                  .attr("class","ColorText")
+                  .attr("y", function(d,i) { return 185; })
+                  .attr("x", 40)
+                  .text(function(d) { return d })
+                  .attr("font-size", "14px");
+            
+            colorText.transition().duration(500).attr("y", function(d,i) { return 185 + i*30; })
+            
+            var colorName;
+            
+            if (varname === "Age_Group") {
+                colorName = "Age";
+            } else { colorName = varname; }
+            
+            svgTop.append("text").text(colorName).attr("id","ColorLegendTitle")
+                                 .attr("text-anchor","middle")
+                                 .attr("x",175).attr("y",150).attr("font-size", "18px");
+        }
+   
+        function colorBin(varname) {
+            if (varname === "Gender") { 
+                nodes
+                    .transition().duration(1000)
+                    .style("fill", function(d) {
+                            if(d.Gender === "Male") {
+                                return "#4169e1"
+                            } else { return "#ff69b4" }
+                        })
+                
+            } else if (varname === "Age_Group") {
+                nodes
+                    .transition().duration(1000)
+                    .style("fill", function(d) {
+                            if(d.Age_Group === "0-12") {
+                                return "#66c2a5"
+                            } else if (d.Age_Group === "13-18") { 
+                                return "#fc8d62" 
+                            } else if (d.Age_Group === "19-25") { 
+                                return "#8da0cb"
+                            } else if (d.Age_Group === "26-45") { 
+                                return "#e78ac3"
+                            } else if (d.Age_Group === "46-64") {
+                                return "#a6d854"   
+                            } else { return "#ffd92f" }                    
+                        })
+            } else if (varname === "Race") {
+                nodes
+                    .transition().duration(1000)
+                    .style("fill", function(d) {
+                            if(d.Race === "White") {
+                                return "#377eb8"
+                            } else if (d.Race === "Asian") { 
+                                return "#e41a1c" 
+                            } else if (d.Race === "Black") { 
+                                return "#4daf4a"
+                            } else if (d.Race === "Undefined") { 
+                                return "#999999"
+                            } else if (d.Race === "American Indian or Alaska Native") {
+                                return "#ff7f00"   
+                            } else if (d.Race === "Native Hawaiian or Other Pacific Islander") {
+                                return "#f781bf"   
+                            }                  
+                        })
+            } else if (varname === "Ethnicity") {
+                nodes
+                    .transition().duration(1000)
+                    .style("fill", function(d) {
+                            if(d.Ethnicity === "Not Hispanic or Latino") {
+                                return "#54278f"
+                            } else if (d.Ethnicity === "Hispanic or Latino") {
+                                return "#006d2c"
+                            } else { return "#999999" }
+                    
+                    
+                })
+            } else {
+                nodes
+                    .transition().duration(1000)
+                    .style("fill", "black")
+            }
+        }
+
+        function draw (varname) {
+          var centers = getCenters(varname, [880, 880]);
+          force.on("tick", tick(centers, varname));
+          labels(centers, varname)
+          force.start();
+        }
+
+        function tick (centers, varname) {
+          var foci = {};
+          for (var i = 0; i < centers.length; i++) {
+            foci[centers[i].name] = centers[i];
+          }
+          return function (e) {
+            for (var i = 0; i < data.length; i++) {
+              var o = data[i];
+              var f = foci[o[varname]];
+              o.y += (f.y - o.y) * e.alpha;
+              o.x += (f.x - o.x) * e.alpha;
+            }
+            nodes.each(collide(.10))
+              .attr("cx", function (d) { return d.x; })
+              .attr("cy", function (d) { return d.y; });
+          }
+        }
+
+        function labels (centers, varname) {
+          svg.selectAll(".label").remove();
+        
+          if (varname === "Gender") {
+            centers[0].count = countGender.F;
+            centers[1].count = countGender.M;
+          } else if (varname === "Race") { 
+            centers[0].count = countRace.White; 
+            centers[1].count = countRace.Undefined; 
+            centers[2].count = countRace.American_Indian_or_Alaska_Native; 
+            centers[3].count = countRace.Asian; 
+            centers[4].count = countRace.Black; 
+            centers[5].count = countRace.Native_Hawaiian_or_Other_Pacific_Islander; 
+          } else if (varname === "Ethnicity") {
+            centers[0].count = countEthnicity.Not_Hispanic_or_Latino;
+            centers[1].count = countEthnicity.Undefined;
+            centers[2].count = countEthnicity.Hispanic_or_Latino;
+          } else if (varname === "Age_Group") {
+            centers[0].count = age1;  
+            centers[3].count = age2;
+            centers[4].count = age3;
+            centers[1].count = age4;  
+            centers[2].count = age5;
+            centers[5].count = age6;
+          } else if (varname === "All") {
+            centers[0].count = data.length;
+            centers[0].name = "Total patients (2001-2015)";
+          }
+            
+          if (varname != "All") {
+              svg.selectAll(".label")
+              .data(centers).enter().append("text")
+              .attr("class", "label")
+              .text(function (d,i) { return d.name + ": (" + d.count + ")" })
+              .attr("transform", function (d) {
+                return "translate(" + (-50 + d.x - ((d.name.length)*4)) + ", " + (d.y - d.r) + ")";
+              });
+          } else {
+              svg.selectAll(".label")
+              .data(centers).enter().append("text")
+              .attr("class", "label")
+              .text(function (d,i) { return d.name + ": (" + d.count + ")" })
+              .attr("transform", function (d) {
+                return "translate(" + (-50 + d.x - ((d.name.length)*4)) + ", " + (250) + ")";
+              });              
+          }
+            
+        }
+
+        function collide(alpha) {
+          var quadtree = d3.geom.quadtree(data);
+          return function (d) {
+            var r = d.radius + maxRadius + padding,
+                nx1 = d.x - r,
+                nx2 = d.x + r,
+                ny1 = d.y - r,
+                ny2 = d.y + r;
+            quadtree.visit(function(quad, x1, y1, x2, y2) {
+              if (quad.point && (quad.point !== d)) {
+                var x = d.x - quad.point.x,
+                    y = d.y - quad.point.y,
+                    l = Math.sqrt(x * x + y * y),
+                    r = d.radius + quad.point.radius + padding;
+                if (l < r) {
+                  l = (l - r) / l * alpha;
+                  d.x -= x *= l;
+                  d.y -= y *= l;
+                  quad.point.x += x;
+                  quad.point.y += y;
+                }
+              }
+              return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+            });
+          };
+        }
+          
+        function removePopovers () {
+          $('.popover').each(function() {
+            $(this).remove();
+          }); 
+        }
+
+        function showPopover (d) {
+          $(this).popover({
+            placement: 'auto top',
+            container: 'body',
+            trigger: 'manual',
+            html : true,
+            content: function() { 
+              return "Age: " + d.Age + "<br/>Gender: " + d.Gender + "<br/>Race: " + d.Race +
+                     "<br/>Ethnicity: " + d.Ethnicity + "<br/>Years at Clinic: " + (d.last_Year-d.first_Year) + " (" + d.first_Year + "-" + d.last_Year + ")"; }
+          });
+          $(this).popover('show')
+        } 
+          
+          
+      });
+    </script>
+    </body>
+</html>
