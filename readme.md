@@ -8,7 +8,7 @@ After a bit of a delay, due to logistical issues obtaining the de-identified cli
 
 
 
-[Overview](overview.png)
+![Overview](overview.png)
 
 This is an example repository for the final project submission.  Put your abstract from your final paper here.
 
