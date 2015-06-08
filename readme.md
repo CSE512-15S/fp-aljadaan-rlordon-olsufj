@@ -1,4 +1,4 @@
-Visualization Prototype Development to Demonstrate the Breadth and Depth of Electronic Health Record Data 
+# Visualization Prototype Development to Demonstrate the Breadth and Depth of Electronic Health Record Data 
 ### Collaborators: Ahmad Aljadaan, Ross Lordon, Jacob Olsufka
 ===============
 
