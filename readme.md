@@ -20,4 +20,6 @@ The paper is still being drafted and will be complete by the due date.
 ===============
 ### Running Instructions
 
+To open the visualizations, [please click here](https://github.com/CSE512-15S/fp-aljadaan-rlordon-olsufj/blob/master/index.html)
+
 
