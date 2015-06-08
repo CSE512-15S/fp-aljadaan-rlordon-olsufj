@@ -9,7 +9,7 @@ After a bit of a delay, due to logistical issues obtaining the de-identified cli
 In this project we assessed the current state of medical data visualization and created three prototype data visualizations for the UW ITHS Data QUEST team. Little research has been conducted in regards to medical data visualization techniques, standards, or applications. Additionally, the Data QUEST team has an immediate need for improved data visualization and interactions on their website. In light of this, we opted to develop three different visualization prototypes. The purpose of each is to allow researchers to quickly and effectively explore the data, while informing potential research questions or projects. In the future, these protypes will be used and refined by the Data QUEST team and eventually incorporated into their website.
 
 ![Overview](overview.png)
-> Screenshot of the three visualizations side-by-side.
+* Screenshot of the three visualizations side-by-side.
 
 ===============
 ### Links
