@@ -4,12 +4,14 @@ Visualization Prototype Development to Demonstrate the Breadth and Depth of Elec
 
 After a bit of a delay, due to the logistics of obtaining the de-identified clinical data, we were able to begin developing our prototypes on May 26th. The main goal of our project was to develop a variety of data visualization methodologies to improve upon the ones currently on the Data QUEST Institute of Translational Health Sciences (ITHS) website. In light of this, we as a group decided to each individually develop a different visualization utilizing a different methodology. This would ensure that the work was divided up equally. Additionally, we worked on the paper and poster collaboratively. 
 
+===============
 ###Abstract
 
 In this project we assessed the current state of medical data visualization practices and standards. Limited research has been conducted in regards to medical data visualization techniques, standards, or applications. Subsequently we created prototype data visualizations depicting population level electronic health record data for the UW ITHS Data QUEST team. The Data QUEST team has an immediate need for improved data visualization and interactions on their website. In light of this, we opted to develop three different visualization prototypes. The purpose of each is to allow researchers to quickly and effectively explore the data, while informing potential research questions or projects. In the future, these prototypes will be assessed and refined by the Data QUEST team. Ultimately the visualizations will be incorporated into their redesigned website this fall.
 
 ===============
 ###Prototype Screenshots
+
 ![Force Bubble Diagram](bubbles.png)
 ###### The force bubble diagram allows the user to explore the breadth and depth of the data in regards to the patients’ demographics. The purpose is to facilitate exploratory data analysis in a fun and engaging experience. It is our hope that this tool creates increased interest from a researcher looking to learn more about the dataset available. This interactive chart allows for two simultaneous user inputs for analysis. First, the bubbles can be sorted by the same demographic categories listed above for the small multiples visualization. Second, the user can color the dots to depict the distribution of a second demographic variable within the clusters of the first demographic variable selected. The size of the bubbles represents the longevity of each patient’s time seen at the clinic. Details on demand are provided to the user through mouse over.
 
