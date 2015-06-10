@@ -30,6 +30,6 @@ In this project we assessed the current state of medical data visualization prac
 ===============
 ### Running Instructions
 
-To open the visualizations, [please click here](https://github.com/CSE512-15S/fp-aljadaan-rlordon-olsufj/blob/master/index.html)
+To open the visualizations, [please click here](https://cse512-15s.github.io/fp-aljadaan-rlordon-olsufj/)
 
 
