@@ -202,7 +202,9 @@ group.selectAll("rect")
     .attr("x", function(d) { return x(d.date); })
     .attr("y", function(d) { return y1(d.value); })
     .attr("width", x.rangeBand())
-    .attr("height", function(d) { return y0.rangeBand() - y1(d.value); });
+    .attr("height", function(d) { return y0.rangeBand() - y1(d.value); })
+    .on("mouseover", function (d) { showPopover.call(this, y0.rangeBand() - y1(d.value)); })
+    .on("mouseout", function (d) { removePopovers(); });
 
 group.filter(function(d, i) { return !i; }).append("g")
     .attr("class", "x axis")
@@ -255,6 +257,29 @@ function transitionStacked() {
   g.selectAll("rect").attr("y", function(d) { return y1(d.value + d.valueOffset); });
   g.select(".group-label").attr("y", function(d) { return y1(d.values[0].value / 2 + d.values[0].valueOffset); })
 }
+    
+    
+function removePopovers () {
+  $('.popover').each(function() {
+    $(this).remove();
+  }); 
+}
+
+function showPopover (d) {
+  var format = d3.format('.0f');
+  $(this).popover({
+    placement: 'right',
+    container: 'body',
+    trigger: 'manual',
+    html : true,
+    content: function() { 
+      return "total: " + format(d); }
+  });
+  $(this).popover('show')
+}    
+    
+    
+    
 
 });
 
