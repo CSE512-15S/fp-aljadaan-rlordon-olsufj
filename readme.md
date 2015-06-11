@@ -25,7 +25,7 @@ In this project we assessed the current state of medical data visualization prac
 
 ===============
 ### Links
-[Poster](https://github.com/CSE512-15S/fp-aljadaan-rlordon-olsufj/blob/master/Poster-Big.png) || [Paper](https://github.com/CSE512-15S/fp-aljadaan-rlordon-olsufj/blob/master/final/paper-aljadaan-rlordon-olsufj.pdf)
+[Poster](https://github.com/CSE512-15S/fp-aljadaan-rlordon-olsufj/blob/master/final/poster-aljadaan-rlordon-olsufj.pdf) || [Paper](https://github.com/CSE512-15S/fp-aljadaan-rlordon-olsufj/blob/master/final/paper-aljadaan-rlordon-olsufj.pdf)
 
 ===============
 ### Running Instructions
