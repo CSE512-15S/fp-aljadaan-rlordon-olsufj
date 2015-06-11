@@ -20,7 +20,7 @@ In this project we assessed the current state of medical data visualization prac
 ###### One visualization method we pursued consisted of a small multiple approach to compare between clinics using bar charts. The purpose of this visualization is to allow researchers the ability quickly assess the demographics of all the clinics combined and for each individual clinic selected for analysis. The demographics included in the prototype are gender, race, ethnicity, and age. One larger multiple is displayed on the left hand side depicting the total for all the clinics currently being analyzed to the right of the larger multiple are the smaller multiples depicting the breakdown of the smaller clinics. Mouse over is incorporated into each bar in each chart to provide details on demand to the user.
 
 ####Stacked Bar Chart
-![Stacked Bar Chart](images/stacked.png)
+![Stacked Bar Chart](images/stacked.PNG)
 ###### The stacked bar chart visualization allows the user to navigate the clinical data for specific disease for different years. This display allows the user to navigate through the aggregate data by number of patients. This is accomplished by selecting from the same demographic options used in the previous examples. Users may find patterns that occurred during a specific time frame for a certain demographic diagnosed with a specific disease. For example, if a user wanted to see if more males than females were diagnosed with depression from 2012-2014, this visualization could help researchers answer the question.
 
 ===============
