@@ -2,14 +2,14 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>ITHS Viz</title>
-        <link href="bootstrap.css" rel="stylesheet">
+        <title>Data QUEST</title>
+        <link href="css/bootstrap.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
         <script type="text/javascript" src="d3/d3.js"></script>
-        <script type="text/javascript" src="underscore.js"></script>
+        <script type="text/javascript" src="js/underscore.js"></script>
         <script src="http://d3js.org/queue.v1.min.js"></script>
-        <script type="text/javascript" src="jquery.js"></script>
-        <script type="text/javascript" src="bootstrap.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/bootstrap.js"></script>
     </head>
     <style type="text/css">
         
@@ -19,6 +19,7 @@
         margin-right: auto;
         font-family: Open Sans,Verdana,Arial,sans-serif;
         font-size: 16px;
+        background: #E8E8E8;
       }
         
       .btn-group {
@@ -32,7 +33,7 @@
       }
         
       svg {
-        border: solid 3px lightgray;
+        border: solid 3px DimGray;
       }
         
       .CenterWrapper { 
@@ -42,7 +43,7 @@
       }
         
       h1,h2,h4 {
-        font-family: Open Sans Light, sans-serif;
+        font-family: Open Sans, sans-serif;
       }
         
       .main-svg {
@@ -50,6 +51,7 @@
         display: inline;
         float: left;
         vertical-align: top;
+        background: white;
       }
         
       .box {
@@ -57,10 +59,11 @@
         margin-right: 5px;  
         display: inline;
         vertical-align: top;
+        background: white;
       }
         
       #main-buttons {
-        width: 345px;
+        width: 500px;
         margin-left: auto;
         margin-right: auto;
       }
@@ -70,15 +73,34 @@
     <body>
         <script src="http://d3js.org/colorbrewer.v1.min.js"></script>
         
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html">Back</a>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+
+                <!-- /.navbar-collapse -->
+            </div>
+        </nav>
+        
+        <br><br><br>
+        
         <div class="CenterWrapper">
             
             <div style="margin-bottom: 20px">
-                <center><h1 style>Primary Care Patient Demographics</h1></center>
-                <center><h4 style = "color:DimGray; font-size:16px">Electronic Health Record Data from the six largest NW clinics</h4></center>
+                <center><h1 style="font-size: 50px">Primary Care Patient Demographics</h1></center>
+                <center><h4 style = "color:DimGray; font-size:20px">Electronic Health Record Data from the six largest NW clinics</h4></center>
             </div> 
             
             <div id="main-buttons" style="margin-bottom: 50px">
-                <div class="btn-group" style= "width: 345px; margin-left: auto; margin-right: auto;" data-toggle="buttons">
+                <div class="btn-group" style= "width: 500px; margin-left: auto; margin-right: auto;" data-toggle="buttons">
 
                 <label class="btn btn-primary active" id="Gender">
                   <input type="radio" name="options"> By Gender
@@ -102,7 +124,7 @@
         
         
         <script>
-        d3.csv('donut.csv', function (error, data) {
+        d3.csv('data/donut.csv', function (error, data) {
             
         var m = 25,
         b = 20;
@@ -149,7 +171,7 @@
         var width = 1000, height = 1000;
         
         var clinics = [999,13,17,14,16,4,12]; // 999 is a dummy value
-            
+        var clinicSize = [15805,12169,8030,3626,3305,2300];
         var clinicNames = ["DUMMY","Clinic 13: (15,805)", "Clinic 17: (12,169)", "Clinic 14: (8,030)", "Clinic 16: (3,626)", "Clinic 4: (3,305)", "Clinic 12: (2,300)" ];
         var genderLabels = ["dummy","dummy","Male","Female"];
         var raceLabels = ["dummy","dummy","dummy","dummy","dummy","dummy","White", "Asian", "Black", "Undefined", "Indian", "Hawaiian"];
@@ -157,13 +179,13 @@
         var ageLabels = ["dummy","dummy","dummy","dummy","dummy","dummy","0-12", "13-18", "19-25", "26-45", "46-64", "65+"];
 
         var DataArray =[];
-        var TotalArray = [];
-            
+        var TotalArray = [];          
         var selection = "Gender";
+            
         dataSetup();
         draw(selection);
             
-        $( ".btn" ).click(function() {            
+        $( ".btn" ).click(function() { 
             selection = this.id;
             dataSetup();
             draw();
@@ -289,7 +311,7 @@
                         maleCount++; Gtotal++;   
                     } else if (data[j].Gender === "F" && data[j].Clinic_ID === clinicID.toString()) { femaleCount++; Gtotal++; }
                 }
-                gender_array = [maleCount/Gtotal, femaleCount/Gtotal];
+                gender_array = [Gtotal, maleCount, femaleCount];
                 if (selection === "Gender") { 
                     return gender_array;
                 }
@@ -313,7 +335,7 @@
                     }
               
                 }
-                race_array = [whiteCount/Rtotal, asianCount/Rtotal, blackCount/Rtotal, undCount/Rtotal, indianCount/Rtotal, islandCount/Rtotal ];                   if (selection === "Race") {
+                race_array = [Rtotal, whiteCount, asianCount, blackCount, undCount, indianCount, islandCount ];                   if (selection === "Race") {
                     return race_array;
                 }
                 
@@ -327,7 +349,7 @@
                     else if ((data[j].Age > 45 && data[j].Age <=64) && data[j].Clinic_ID === clinicID.toString()) { age5++; ageTotal++; }
                     else if ((data[j].Age >= 65) && data[j].Clinic_ID === clinicID.toString()) { age6++; ageTotal++; }
                 }
-                age_array = [age1/ageTotal, age2/ageTotal, age3/ageTotal, age4/ageTotal, age5/ageTotal, age6/ageTotal]; 
+                age_array = [ageTotal,age1, age2, age3, age4, age5, age6]; 
                 if (selection === "Age_Group") { 
                     return age_array;
                 }
@@ -341,12 +363,10 @@
                     else if (data[j].Ethnicity === "Undefined" && data[j].Clinic_ID === clinicID.toString()) { und++; Etotal++; }
                     else if (data[j].Ethnicity === "" && data[j].Clinic_ID === clinicID.toString()) { und++; Etotal++; }
                 }
-                ethnicity_array = [hispanic/Etotal, notHispanic/Etotal, und/Etotal];
+                ethnicity_array = [Etotal, hispanic, notHispanic, und];
                 if (selection === "Ethnicity") { 
                     return ethnicity_array;
                 }
-                
-                
             } 
         }
             
@@ -378,9 +398,6 @@
                 var tempDataArray = whatClinic(clinics[i], selection);
                 DataArray.push(tempDataArray); 
             }
-            
-            //console.log(DataArray);
-            
         }
         
         function draw() {
@@ -399,11 +416,13 @@
                 var rect = svgMain.selectAll("rect")
                             .data(overallArray)
                             .enter().append("rect")
-                            .attr("class","bar")
+                            .attr("class","test")
                             .attr("x", function(d,i) { return start + i*(bigw+bigb) })
                             .attr("y", function(d) { return (h*2+10-150)-0; })
                             .attr("width", bigw)
                             .attr("height", function(d) { return 0; })
+                            .on("mouseover", function (d) { showPopover.call(this, d); })
+                            .on("mouseout", function (d) { removePopovers(); })
                             .style("fill", genderColor );
                 
                 rect.transition().duration(1000)
@@ -436,7 +455,6 @@
                 var l = 6;
                 var start = (4*(r+m) - (bigw*l + bigb*(l-1)))/2;
                 
-            
                 var rect = svgMain.selectAll("rect")
                             .data(overallArray)
                             .enter().append("rect")
@@ -445,6 +463,8 @@
                             .attr("y", function(d) { return (h*2+10-150)-0; })
                             .attr("width", bigw)
                             .attr("height", function(d) { return 0; })
+                            .on("mouseover", function (d) { showPopover.call(this, d); })
+                            .on("mouseout", function (d) { removePopovers(); })
                             .style("fill", raceColor2 );
                 
                 rect.transition().duration(1000)
@@ -485,6 +505,8 @@
                             .attr("y", function(d) { return (h*2+10-150)-0; })
                             .attr("width", bigw)
                             .attr("height", function(d) { return 0; })
+                            .on("mouseover", function (d) { showPopover.call(this, d); })
+                            .on("mouseout", function (d) { removePopovers(); })
                             .style("fill", ethnicityColor );
                 
                 rect.transition().duration(1000)
@@ -526,6 +548,8 @@
                             .attr("y", function(d) { return (h*2+10-150)-0; })
                             .attr("width", bigw)
                             .attr("height", function(d) { return 0; })
+                            .on("mouseover", function (d) { showPopover.call(this, d); })
+                            .on("mouseout", function (d) { removePopovers(); })
                             .style("fill", ageColor );
                 
                 rect.transition().duration(1000)
@@ -559,7 +583,7 @@
             
             
             svgMain.append("text").attr("text-anchor", "middle").attr("font-size", "22px")
-                                  .attr("font-family", "Open Sans Light")
+                                  .attr("font-family", "Open Sans")
                                   .attr("x", (r+m)*2).attr("y", 30)
                                   .text("Total: (45,235)");            
             
@@ -589,17 +613,16 @@
                                  .attr("y", -(r))
                                  .attr("text-anchor", "middle")
                                  .attr("font-size", "20px")
-                                 .attr("font-family","Open Sans Light")
+                                 .attr("font-family","Open Sans")
                                  .text(function (d) { return d; });
             
-        }
-         
+        }   
+       
         function multiple() {
               var svg = d3.select(this);
               var format = d3.format('.1f');
-             
+
               if (selection === "Gender") {
-                  
                   var l = 2;
                   var start = (2*(r+m) - (w*l + b*(l-1)))/2;
                   start += -(r+m);
@@ -610,22 +633,24 @@
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
                         .attr("height", function(d) { return 0*scale; })
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 1); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .style("fill", genderColor(0));
                   
                   bar1.transition().duration(1000)
-                        .attr("y", function(d) { return -d[0]*scale; })
-                        .attr("height", function(d) { return d[0]*scale; });
+                        .attr("y", function(d) { return -(d[1]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[1]/d[0])*scale; });
                   
                   var labels1 = svg
                      .append("text")
-                     .text(function(d) { return format( d[0] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[1]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x", start + w/2)
-                     .attr("y", function(d) { return -d[0]*0 - 5; })
+                     .attr("y", function(d) { return 0 - 5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                   
-                  labels1.transition().duration(1000).attr("y", function(d) { return -d[0]*scale - 5; })
+                  labels1.transition().duration(1000).attr("y", function(d) { return -(d[1]/d[0])*scale - 5; })
                   
                   svg
                     .append("text")
@@ -642,22 +667,25 @@
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
                         .attr("height", function(d) { return 0*scale; })
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 2); })
+                        .on("mouseout", function (d) { removePopovers(); })
+                        .attr("height", function(d) { return 0*scale; })
                         .style("fill", genderColor(1));
                   
                   bar2.transition().duration(1000)
-                        .attr("y", function(d) { return -d[1]*scale; })
-                        .attr("height", function(d) { return d[1]*scale; });
+                        .attr("y", function(d) { return -(d[2]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[2]/d[0])*scale; });
                   
                   var labels2 = svg
                      .append("text")
-                     .text(function(d) { return format( d[1] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[2]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x", start+(w+b) + w/2)
-                     .attr("y", function(d) { return -d[1]*0 - 5; })
+                     .attr("y", function(d) { return 0 - 5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                   
-                  labels2.transition().duration(1000).attr("y", function(d) { return -d[1]*scale - 5; })
+                  labels2.transition().duration(1000).attr("y", function(d) { return -(d[2]/d[0])*scale - 5; })
                   
                   svg
                     .append("text")
@@ -676,198 +704,212 @@
                  var l = 6;
                  var start = (2*(r+m) - (w*l + b*(l-1)))/2;
                  start += -(r+m);
+                 
+                 var q = 15;
              
                 var bar1 = svg.append("rect")
                         .attr("x", function(d,i) { return start+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 1); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", raceColor(0));
                  
                  bar1.transition().duration(1000)
-                        .attr("y", function(d) { return -d[0]*scale; })
-                        .attr("height", function(d) { return d[0]*scale; });
+                        .attr("y", function(d) { return -(d[1]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[1]/d[0])*scale; });
                  
                  var labels1 = svg
                      .append("text")
-                     .text(function(d) { return format( d[0] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[1]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x",start + w/2)
-                     .attr("y", function(d) { return -d[0]*0-5; })
+                     .attr("y", function(d) { return 0-5 ; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                  
-                 labels1.transition().duration(1000).attr("y", function(d) { return -d[0]*scale - 5; })
+                 labels1.transition().duration(1000).attr("y", function(d) { return -(d[1]/d[0])*scale - 5; })
                  
                  svg
                     .append("text")
                     .text(function(d) { return "White"; })
                     .attr("text-anchor", "end")
                     .attr("x", start + w/2)
-                    .attr("y", 20)
+                    .attr("y", q)
                     .attr("fill", "DimGray")
                     .attr("font-size", "14px")
-                    .attr("transform", function(d) { return "rotate(-45 -125,20)" });
+                    .attr("transform", function(d) { return "rotate(-45 -125, 15)" });
 
                  var bar2 = svg.append("rect")
                         .attr("x", function(d,i) { return start+(w+b)+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 2); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", raceColor(1));
                  
                  bar2.transition().duration(1000)
-                        .attr("y", function(d) { return -d[1]*scale; })
-                        .attr("height", function(d) { return d[1]*scale; });
+                        .attr("y", function(d) { return -(d[2]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[2]/d[0])*scale; });
                  
                  var labels2 = svg
                      .append("text")
-                     .text(function(d) { return format( d[1] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[2]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x", start+(w+b) + w/2)
-                     .attr("y", function(d) { return -d[1]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                  
-                 labels2.transition().duration(1000).attr("y", function(d) { return -d[1]*scale - 5; })
+                 labels2.transition().duration(1000).attr("y", function(d) { return -(d[2]/d[0])*scale - 5; })
                  
                  svg
                     .append("text")
                     .text(function(d) { return "Asian"; })
                     .attr("text-anchor", "end")
                     .attr("x", start+(w+b) + w/2)
-                    .attr("y", 20)
+                    .attr("y", q)
                     .attr("fill", "DimGray")
                     .attr("font-size", "14px")
-                    .attr("transform", function(d) { return "rotate(-45 -75,20)" });
+                    .attr("transform", function(d) { return "rotate(-45 -75,15)" });
 
                  var bar3 = svg.append("rect")
                         .attr("x", function(d,i) { return start + (w+b)*2 +i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 3); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", raceColor(2));
                  
                  bar3.transition().duration(1000)
-                        .attr("y", function(d) { return -d[2]*scale; })
-                        .attr("height", function(d) { return d[2]*scale; });
+                        .attr("y", function(d) { return -(d[3]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[3]/d[0])*scale; });
                  
                  var labels3 = svg
                      .append("text")
-                     .text(function(d) { return format( d[2] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[3]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x",start + (w+b)*2 + w/2)
-                     .attr("y", function(d) { return -d[2]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                  
-                 labels3.transition().duration(1000).attr("y", function(d) { return -d[2]*scale - 5; })
+                 labels3.transition().duration(1000).attr("y", function(d) { return -(d[3]/d[0])*scale - 5; })
                  
                  svg
                     .append("text")
                     .text(function(d) { return "Black"; })
                     .attr("text-anchor", "end")
                     .attr("x", start + (w+b)*2 + w/2)
-                    .attr("y", 20)
+                    .attr("y", q)
                     .attr("fill", "DimGray")
                     .attr("font-size", "14px")
-                    .attr("transform", function(d) { return "rotate(-45 -25,20)" });
+                    .attr("transform", function(d) { return "rotate(-45 -25, 15)" });
 
                  var bar4 = svg.append("rect")
                         .attr("x", function(d,i) { return start + (w+b)*3+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 4); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", raceColor(3));
                  
                  bar4.transition().duration(1000)
-                        .attr("y", function(d) { return -d[3]*scale; })
-                        .attr("height", function(d) { return d[3]*scale; });
+                        .attr("y", function(d) { return -(d[4]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[4]/d[0])*scale; });
                  
                  var labels4 = svg
                      .append("text")
-                     .text(function(d) { return format( d[3] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[4]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x",start + (w+b)*3 + w/2)
-                     .attr("y", function(d) { return -d[3]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                  
-                 labels4.transition().duration(1000).attr("y", function(d) { return -d[3]*scale - 5; })
+                 labels4.transition().duration(1000).attr("y", function(d) { return -(d[4]/d[0])*scale - 5; })
                  
                  svg
                     .append("text")
                     .text(function(d) { return "Undefined"; })
                     .attr("text-anchor", "end")
                     .attr("x", start + (w+b)*3 + w/2)
-                    .attr("y", 20)
+                    .attr("y", q)
                     .attr("fill", "DimGray")
                     .attr("font-size", "14px")
-                    .attr("transform", function(d) { return "rotate(-45 25,20)" });
+                    .attr("transform", function(d) { return "rotate(-45 25, 15)" });
                  
                  var bar5 = svg.append("rect")
                         .attr("x", function(d,i) { return start + (w+b)*4+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 5); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", raceColor(4));
                  
                  bar5.transition().duration(1000)
-                        .attr("y", function(d) { return -d[4]*scale; })
-                        .attr("height", function(d) { return d[4]*scale; });
+                        .attr("y", function(d) { return -(d[5]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[5]/d[0])*scale; });
                  
                  var labels5 = svg
                      .append("text")
-                     .text(function(d) { return format( d[4] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[5]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x", start + (w+b)*4 + w/2)
-                     .attr("y", function(d) { return -d[4]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                  
-                 labels5.transition().duration(1000).attr("y", function(d) { return -d[4]*scale - 5; })
+                 labels5.transition().duration(1000).attr("y", function(d) { return -(d[5]/d[0])*scale - 5; })
                  
                  svg
                     .append("text")
                     .text(function(d) { return "Indian"; })
                     .attr("text-anchor", "end")
                     .attr("x", start + (w+b)*4 + w/2)
-                    .attr("y", 20)
+                    .attr("y", q)
                     .attr("fill", "DimGray")
                     .attr("font-size", "14px")
-                    .attr("transform", function(d) { return "rotate(-45 75,20)" });
+                    .attr("transform", function(d) { return "rotate(-45 75, 15)" });
                  
                  var bar6 = svg.append("rect")
                         .attr("x", function(d,i) { return start + (w+b)*5+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 6); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", raceColor(5));
                  
                  bar6.transition().duration(1000)
-                        .attr("y", function(d) { return -d[5]*scale; })
-                        .attr("height", function(d) { return d[5]*scale; });
+                        .attr("y", function(d) { return -(d[6]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[6]/d[0])*scale; });
                  
                  var labels6 = svg
                      .append("text")
-                     .text(function(d) { return format( d[5] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[6]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x", start + (w+b)*5 + w/2)
-                     .attr("y", function(d) { return -d[5]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                  
-                 labels6.transition().duration(1000).attr("y", function(d) { return -d[5]*scale - 5; })
+                 labels6.transition().duration(1000).attr("y", function(d) { return -(d[6]/d[0])*scale - 5; })
                  
                  svg
                     .append("text")
                     .text(function(d) { return "Hawaiian"; })
                     .attr("text-anchor", "end")
                     .attr("x", start + (w+b)*5 + w/2)
-                    .attr("y", 20)
+                    .attr("y", q)
                     .attr("fill", "DimGray")
                     .attr("font-size", "14px")
-                    .attr("transform", function(d) { return "rotate(-45 125,20)" });
+                    .attr("transform", function(d) { return "rotate(-45 125, 15)" });
             
             }
              
@@ -881,23 +923,25 @@
                         .attr("x", function(d,i) { return start+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 1); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", ageColor(0));
                 
                 bar1.transition().duration(1000)
-                        .attr("y", function(d) { return -d[0]*scale; })
-                        .attr("height", function(d) { return d[0]*scale; });
+                        .attr("y", function(d) { return -(d[1]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[1]/d[0])*scale; });
                  
                 var labels1 = svg
                      .append("text")
-                     .text(function(d) { return format( d[0] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[1]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x",start + w/2)
-                     .attr("y", function(d) { return -d[0]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                 
-                labels1.transition().duration(1000).attr("y", function(d) { return -d[0]*scale - 5; })
+                labels1.transition().duration(1000).attr("y", function(d) { return -(d[1]/d[0])*scale - 5; })
                 
                 svg
                     .append("text")
@@ -913,23 +957,25 @@
                         .attr("x", function(d,i) { return start+(w+b)+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 2); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", ageColor(1));
                 
                 bar2.transition().duration(1000)
-                        .attr("y", function(d) { return -d[1]*scale; })
-                        .attr("height", function(d) { return d[1]*scale; });
+                        .attr("y", function(d) { return -(d[2]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[2]/d[0])*scale; });
                  
                 var labels2 = svg
                      .append("text")
-                     .text(function(d) { return format( d[1] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[2]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x", start+(w+b) + w/2)
-                     .attr("y", function(d) { return -d[1]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                 
-                labels2.transition().duration(1000).attr("y", function(d) { return -d[1]*scale - 5; })
+                labels2.transition().duration(1000).attr("y", function(d) { return -(d[2]/d[0])*scale - 5; })
                 
                 svg
                     .append("text")
@@ -944,23 +990,25 @@
                         .attr("x", function(d,i) { return start + (w+b)*2 +i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 3); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", ageColor(2));
                 
                 bar3.transition().duration(1000)
-                        .attr("y", function(d) { return -d[2]*scale; })
-                        .attr("height", function(d) { return d[2]*scale; });
+                        .attr("y", function(d) { return -(d[3]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[3]/d[0])*scale; });
                  
                 var labels3 = svg
                      .append("text")
-                     .text(function(d) { return format( d[2] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[3]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x",start + (w+b)*2 + w/2)
-                     .attr("y", function(d) { return -d[2]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                 
-                labels3.transition().duration(1000).attr("y", function(d) { return -d[2]*scale - 5; })
+                labels3.transition().duration(1000).attr("y", function(d) { return -(d[3]/d[0])*scale - 5; })
                 
                 svg
                     .append("text")
@@ -975,23 +1023,25 @@
                         .attr("x", function(d,i) { return start + (w+b)*3+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 4); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", ageColor(3));
                 
                 bar4.transition().duration(1000)
-                        .attr("y", function(d) { return -d[3]*scale; })
-                        .attr("height", function(d) { return d[3]*scale; });
+                        .attr("y", function(d) { return -(d[4]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[4]/d[0])*scale; });
                  
                 var labels4 = svg
                      .append("text")
-                     .text(function(d) { return format( d[3] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[4]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x",start + (w+b)*3 + w/2)
-                     .attr("y", function(d) { return -d[3]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                 
-                labels4.transition().duration(1000).attr("y", function(d) { return -d[3]*scale - 5; })
+                labels4.transition().duration(1000).attr("y", function(d) { return -(d[4]/d[0])*scale - 5; })
                 
                 svg
                     .append("text")
@@ -1006,23 +1056,25 @@
                         .attr("x", function(d,i) { return start + (w+b)*4+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 5); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", ageColor(4));
                 
                 bar5.transition().duration(1000)
-                        .attr("y", function(d) { return -d[4]*scale; })
-                        .attr("height", function(d) { return d[4]*scale; });
+                        .attr("y", function(d) { return -(d[5]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[5]/d[0])*scale; });
                  
                 var labels5 = svg
                      .append("text")
-                     .text(function(d) { return format( d[4] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[5]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x", start + (w+b)*4 + w/2)
-                     .attr("y", function(d) { return -d[4]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                 
-                labels5.transition().duration(1000).attr("y", function(d) { return -d[4]*scale - 5; })
+                labels5.transition().duration(1000).attr("y", function(d) { return -(d[5]/d[0])*scale - 5; })
                 
                 svg
                     .append("text")
@@ -1037,23 +1089,25 @@
                         .attr("x", function(d,i) { return start + (w+b)*5+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 6); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", ageColor(5));
                 
                 bar6.transition().duration(1000)
-                        .attr("y", function(d) { return -d[5]*scale; })
-                        .attr("height", function(d) { return d[5]*scale; });
+                        .attr("y", function(d) { return -(d[6]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[6]/d[0])*scale; });
                  
                 var labels6 = svg
                      .append("text")
-                     .text(function(d) { return format( d[5] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[6]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x", start + (w+b)*5 + w/2)
-                     .attr("y", function(d) { return -d[5]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                 
-                labels6.transition().duration(1000).attr("y", function(d) { return -d[5]*scale - 5; })
+                labels6.transition().duration(1000).attr("y", function(d) { return -(d[6]/d[0])*scale - 5; })
                 
                 svg
                     .append("text")
@@ -1066,119 +1120,151 @@
             
             }
              
-             if (selection === "Ethnicity") {
-                 
+             if (selection === "Ethnicity") {                 
                  var l = 3;
                  var start = (2*(r+m) - (w*l + b*(l-1)))/2;
                  start += -(r+m);
-                 console.log(start+w/2);
+                 
+                 var q = 15;
              
                  var bar1 = svg.append("rect")
                         .attr("x", function(d,i) { return start+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 1); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", ethnicityColor(0));
                  
                  bar1.transition().duration(1000)
-                        .attr("y", function(d) { return -d[0]*scale; })
-                        .attr("height", function(d) { return d[0]*scale; })
+                        .attr("y", function(d) { return -(d[1]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[1]/d[0])*scale; })
                  
                  var labels1 = svg
                      .append("text")
-                     .text(function(d) { return format( d[0] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[1]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x", start + w/2)
-                     .attr("y", function(d) { return -d[0]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                  
-                 labels1.transition().duration(1000).attr("y", function(d) { return -d[0]*scale - 5; })
+                 labels1.transition().duration(1000).attr("y", function(d) { return -(d[1]/d[0])*scale - 5; })
                  
                  svg
                     .append("text")
                     .text(function(d) { return "Not Hispanic"; })
                     .attr("text-anchor", "end")
                     .attr("x", start + w/2)
-                    .attr("y", 20)
+                    .attr("y", q)
                     .attr("fill", "DimGray")
                     .attr("font-size", "14px")
-                    .attr("transform", function(d) { return "rotate(-45 -50,20)" });
+                    .attr("transform", function(d) { return "rotate(-45 -50, 15)" });
 
                  var bar2 = svg.append("rect")
                         .attr("x", function(d,i) { return start+(w+b)+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 2); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", ethnicityColor(1));
                  
                  bar2.transition().duration(1000)
-                        .attr("y", function(d) { return -d[1]*scale; })
-                        .attr("height", function(d) { return d[1]*scale; })
+                        .attr("y", function(d) { return -(d[2]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[2]/d[0])*scale; })
                  
                  var labels2 = svg
                      .append("text")
-                     .text(function(d) { return format( d[1] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[2]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x", start+(w+b) + w/2)
-                     .attr("y", function(d) { return -d[1]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                  
-                 labels2.transition().duration(1000).attr("y", function(d) { return -d[1]*scale - 5; })
+                 labels2.transition().duration(1000).attr("y", function(d) { return -(d[2]/d[0])*scale - 5; })
                  
                  svg
                     .append("text")
                     .text(function(d) { return "Hispanic"; })
                     .attr("text-anchor", "end")
                     .attr("x", start+(w+b) + w/2)
-                    .attr("y", 20)
+                    .attr("y", q)
                     .attr("fill", "DimGray")
                     .attr("font-size", "14px")
-                    .attr("transform", function(d) { return "rotate(-45 0,20)" });
+                    .attr("transform", function(d) { return "rotate(-45 0, 15)" });
                 
                  var bar3 = svg.append("rect")
                         .attr("x", function(d,i) { return start+(w+b)*2+i*(w+5) })
                         .attr("y", function(d) { return 0*scale; })
                         .attr("width", w)
+                        .on("mouseover", function (d) { showPopoverSM.call(this, d, 3); })
+                        .on("mouseout", function (d) { removePopovers(); })
                         .attr("height", function(d) { return 0*scale; })
                         .style("fill", ethnicityColor(2));
                  
                  bar3.transition().duration(1000)
-                        .attr("y", function(d) { return -d[2]*scale; })
-                        .attr("height", function(d) { return d[2]*scale; })
+                        .attr("y", function(d) { return -(d[3]/d[0])*scale; })
+                        .attr("height", function(d) { return (d[3]/d[0])*scale; })
                  
                  var labels3 = svg
                      .append("text")
-                     .text(function(d) { return format( d[2] * 100 ) + "%"; })
+                     .text(function(d) { return format( (d[3]/d[0]) * 100 ) + "%"; })
                      .attr("text-anchor", "middle")
                      .attr("x", start+(w+b)*2 + w/2)
-                     .attr("y", function(d) { return -d[2]*0-5; })
+                     .attr("y", function(d) { return 0-5; })
                      .attr("fill", "black")
                      .attr("font-size", "14px");
                  
-                 labels3.transition().duration(1000).attr("y", function(d) { return -d[2]*scale - 5; })
+                 labels3.transition().duration(1000).attr("y", function(d) { return -(d[3]/d[0])*scale - 5; })
                  
                  svg
                     .append("text")
                     .text(function(d) { return "Undefined"; })
                     .attr("text-anchor", "end")
                     .attr("x", start+(w+b)*2 + w/2)
-                    .attr("y", 20)
+                    .attr("y", q)
                     .attr("fill", "DimGray")
                     .attr("font-size", "14px")
-                    .attr("transform", function(d) { return "rotate(-45 50,20)" });
-                 
-                 
+                    .attr("transform", function(d) { return "rotate(-45 50, 15)" }); 
             
             }
 
         } 
-        
             
-       
+        function removePopovers () {
+          $('.popover').each(function() {
+            $(this).remove();
+          }); 
+        }
+
+        function showPopover (d) {
+          //var format = d3.format('.0f');
+          $(this).popover({
+            placement: 'right',
+            container: 'body',
+            trigger: 'manual',
+            html : true,
+            content: function() { 
+              return "total: " + (d*45235).toFixed(0) }
+          });
+          $(this).popover('show')
+        }
             
-          
+        function showPopoverSM (d,index) {
+          //var format = d3.format('.0f');
+          $(this).popover({
+            placement: 'right',
+            container: 'body',
+            trigger: 'manual',
+            html : true,
+            content: function() { 
+              return "total: " + (d[index]).toLocaleString() }
+          });
+          $(this).popover('show')
+        }
+                      
       });
     </script>
     </body>

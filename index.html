@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Projects</title>
+    <title>Data QUEST</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -16,16 +16,27 @@
     <!-- Custom CSS -->
     <link href="css/1-col-portfolio.css" rel="stylesheet">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 
 </head>
 
 <body>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!--<a class="navbar-brand" href="index.html">Home</a>-->
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            
+            <!-- /.navbar-collapse -->
+        </div>
+    </nav>
     
 
     <!-- Page Content -->
@@ -34,28 +45,55 @@
         <!-- Page Heading -->
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">ITHS Visualizations
-                    <small>Built with d3.js</small>
+                <h1 class="page-header">ITHS Data Visualizations
+                    <small>CSE 512 Final Project</small> <p style="font-size: 14px">Jacob Olsufka, Ross Lordon, Ahmad Aljadaan</p>
                 </h1>
             </div>
+            
+            <p>In this project we created three prototype data visualizations 
+for the UW ITHS Data QUEST team. The Data QUEST team has an immediate need for improved 
+data visualization and interactions on their website. In light 
+of this, we opted to develop three different visualization 
+prototypes. The purpose of each is to allow researchers to 
+quickly and effectively explore the data, while influencing 
+potential research questions or projects.</p>
         </div>
         <!-- /.row -->
+        
+        <br>
 
         <!-- Project One -->
         <div class="row">
             <div class="col-md-7">
-                    <img class="img-responsive" src="multiples.png" alt="">
+                    <img class="img-responsive" src="images/multiples.png" alt="">
             </div>
             <div class="col-md-5">
                 <h3>Small Multiples</h3>
-                <p>A small multiple approach to displaying demographic breakdowns for the six largest clinics in the northwest. The aggregated demographic breakdown showing the overall breakdown is shown in the large box to the left. This visualization is intended to allow the user to explore differences between the clinics, and gain an understanding for the diversity of the patient data. For example, if a user is interested in data from a clinic with a high percentage of Asian patients, this can quickly support that task.
-                    <br><br>
-                    Basic features:
-                    <br>
-                    <ul>
-                        <li>Change which demographic (gender, race, ethnicity, age) the charts show.</li> 
-                        <li>Mousevoer shows the total number represented by each bar.</li> 
-                    </ul>
+                <p>One visualization method we pursued consisted of a small 
+
+multiple approach to compare between clinics using bar 
+
+charts. The purpose of this visualization is to allow 
+
+researchers the ability quickly assess the demographics of 
+
+all the clinics combined and for each individual clinic 
+
+selected for analysis. The demographics included in the 
+
+prototype are gender, race, ethnicity, and age. One larger 
+
+multiple is displayed on the left hand side depicting the 
+
+total for all the clinics currently being analyzed to the right 
+
+of the larger multiple are the smaller multiples depicting the 
+
+breakdown of the smaller clinics. Mouse over is 
+
+incorporated into each bar in each chart to provide details 
+
+on demand to the user.
                 </p>
                 <br>
                 <a class="btn btn-primary" href="multiples.html">View<span class="glyphicon glyphicon-chevron-right"></span></a>
@@ -68,26 +106,42 @@
         <!-- Project Two -->
         <div class="row">
             <div class="col-md-7">
-                    <img class="img-responsive" src="bubbles.png" alt="">
+                    <img class="img-responsive" src="images/bubbles.png" alt="">
             </div>
             <div class="col-md-5">
                 <h3>Force Bubble Diagram</h3>
-                <p>The force bubble diagram attempts to allow the user to explore the size of the data, and how the patients are broken up between different demographics. It is meant to be a fun and engaging experience, that serves an exploratory task, and hopefully garners further interest from a researcher looking to learn more about the dataset available.
-                <br><br>
-                Basic features: 
-                <br>
-                <ul>
-                    <li>This interactive chart allows for two user inputs.</li>    
-                        <ul>
-                            <li>One for sorting the bubbles by different demographic categories (gender, race, ethnicity, age).</li>
-                            <li>One for coloring the bubbles based on different demographic categories.</li>
-                        </ul>
-                    <li>The size of the bubbles represents the longevity of each patient's time seen at the clinic.</li>
-                    <li>When you mouseover a bubble, details on demand are shown.</li>                    
-                </ul>    
+                <p>The force bubble diagram allows the user to explore the
+
+breadth and depth of the data in regards to the patients’
+
+demographics. The purpose is to facilitate exploratory data 
+
+analysis in a fun and engaging experience. It is our hope 
+
+that this tool creates increased interest from a researcher 
+
+looking to learn more about the dataset available. This 
+
+interactive chart allows for two simultaneous user inputs for 
+
+analysis. First, the bubbles can be sorted by the same 
+
+demographic categories listed above for the small multiples 
+
+visualization. Second, the user can color the dots to depict
+
+the distribution of a second demographic variable within the 
+
+clusters of the first demographic variable selected. The size 
+
+of the bubbles represents the longevity of each patient’s 
+
+time seen at the clinic. Details on demand are provided to 
+
+the user through mouse over.   
                 </p>
                 <br>
-                <a class="btn btn-primary" href="webEx.html">View <span class="glyphicon glyphicon-chevron-right"></span></a>
+                <a class="btn btn-primary" href="bubbles.html">View <span class="glyphicon glyphicon-chevron-right"></span></a>
             </div>
         </div>
         <!-- /.row -->
@@ -97,19 +151,31 @@
         <!-- Project Three -->
         <div class="row">
             <div class="col-md-7">
-                    <img class="img-responsive" src="stacked.PNG" alt="">
+                    <img class="img-responsive" src="images/stacked.PNG" alt="">
             </div>
             <div class="col-md-5">
                 <h3>Stacked Bar Chart</h3>
-                <p>The Stacked-to-Multiple visualization allows the user to navigate the clinical data for specific disease for different years. This display allows the user to navigate through the aggregate data of number of patients by selecting specific demographic criteria such as age, race or gender. Users can highlight trends that happened during the years for specific selecting group. For example, if the user is investigating the relationship between Lactose intolerance and Hispanic race they can find an answer for that.
-                <br><br>
-                Basic features: 
-                <br>
-                <ul>
-                    <li>Transition the chart between a stacked bar chart and a small multiples representation.</li>  
-                    <li>The visualization allow user to select their demographic search of their choice such as race, age or gender.</li>     
-                    <li>Mouse over will provide detail information about the selected group in the bar chart.</li>
-                </ul>  
+                <p>The stacked bar chart visualization allows the user to
+
+navigate the clinical data for specific disease for different 
+
+years. This display allows the user to navigate through the 
+
+aggregate data by number of patients. This is accomplished 
+
+by selecting from the same demographic options used in the 
+
+previous examples. Users may find patterns that occurred 
+
+during a specific time frame for a certain demographic 
+
+diagnosed with a specific disease. For example, if a user 
+
+wanted to see if more males than females were diagnosed 
+
+with depression from 2012-2014, this visualization could
+
+help researchers answer the question. 
                 </p>
                 <br>
                 <a class="btn btn-primary" href="StackedChart/index.html">View <span class="glyphicon glyphicon-chevron-right"></span></a>

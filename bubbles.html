@@ -2,20 +2,21 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>ITHS Viz</title>
-        <link href="bootstrap.css" rel="stylesheet">
+        <title>Data QUEST</title>
+        <link href="css/bootstrap.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
         <script type="text/javascript" src="d3/d3.js"></script>
         <script src="http://d3js.org/queue.v1.min.js"></script>
-        <script type="text/javascript" src="underscore.js"></script>
-        <script type="text/javascript" src="jquery.js"></script>
-        <script type="text/javascript" src="bootstrap.js"></script>
+        <script type="text/javascript" src="js/underscore.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/bootstrap.js"></script>
     </head>
     <style type="text/css">
       
       body {
         font-family: Open Sans,Verdana,Arial,sans-serif;
         font-size: 16px;
+        background: #E8E8E8;
       }
         
       .btn-group {
@@ -25,7 +26,7 @@
       .label {
         font-family: Open Sans Light, sans-serif;
         fill: DimGray;
-        font-size: 16px;
+        font-size: 24px;
       }
     
       .CenterWrapper { 
@@ -39,7 +40,7 @@
       }
         
       #main-buttons {
-        width: 400px;
+        width: 580px;
         margin-left: auto;
         margin-right: auto;
       }
@@ -48,36 +49,104 @@
         border-top: 3px solid black;  
         border-bottom: 3px solid black;
         border-left: 3px solid black;
+        margin-left: 30px;
+        margin-top: 20px;
+        background: white;
       }
     
       .svgMain {
         border-top: 3px solid black;  
         border-bottom: 3px solid black;
         border-right: 3px solid black;  
-        border-left: 3px solid black;           
+        border-left: 3px solid black;
+        margin-top: 20px;
+        background: white;
       }
         
       #color-buttons {
-        margin-left: 100px;
+        margin-left: 50px;
         width: 150px;
         height: 200px;
         display: inline-block;  
         float: left;
       }
+    
+      .btn_a {
+          width: 130px;
+          display: inline-block;
+          background: DimGray;
+          margin-bottom: 0px;
+          margin-left: 35px;
+          font-weight: normal;
+          text-align: center;
+          cursor: pointer;
+          border-top: 1px solid gray;
+          white-space: nowrap;
+          padding: 8px 14px;
+          font-size: 18px;
+          color: white;
+          line-height: 2.0/*1.428571429;*/
+          border-radius: 6px;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          -o-user-select: none;
+          user-select: none;
+          background-image: none;
+        
+      }
+
+    .btn_a:hover {
+      background: #555555;
+      color: white;
+      text-decoration: none;
+    }
+        
+    .btn_a:active {
+        background: #555555;
+        box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    }
+        
+    .btn_a.active {
+        background: #555555;
+        box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    }
+        
+      [type='radio'] {
+        display: none; 
+      }
         
     </style>
     <body>
         
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html">Back</a>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+
+                <!-- /.navbar-collapse -->
+            </div>
+        </nav>
+        
+        <br><br>
         
         <div class="CenterWrapper">
             
             <div id="title" style="margin-bottom: 20px">
-                <center><h1>Primary Care Patient Demographics</h1></center>
-                <center><h4 style = "color:DimGray; font-size:16px">Electronic Health Record Data from a NW clinic treating underserved patients</h4></center>
+                <center><h1 style= "font-size:50px">Primary Care Patient Demographics</h1></center>
+                <center><h4 style = "color:DimGray; font-size:20px">Electronic Health Record Data from a NW clinic treating underserved patients</h4></center>
             </div>    
             
             <div id="main-buttons">
-                <div class="btn-group" style= "width: 400px; margin-left: auto; margin-right: auto;" data-toggle="buttons"> <!--class="btn-group"-->
+                <div class="btn-group" style= "width: 580px; margin-left: auto; margin-right: auto;" data-toggle="buttons"> <!--class="btn-group"-->
 
                 <label class="btn btn-primary active" id="All">
                   <input type="radio" name="options"> Total
@@ -101,36 +170,36 @@
                     
                 </div>
 
-                <center><h4 style="font-size: 16px">< Sort by Demographic ></h4></center>
+                <!--<center><h4 style="font-size: 22px">< Choose Demographic to sort by ></h4></center>-->
 
                 
             </div>
 
-            <div id="color-buttons">
+            <div class="btn-group" style= "width: 200px" id="color-buttons" data-toggle="buttons">
                 
-            <h4>Group by Color</h4>
+                <center><h4 style="font-size: 22px">Group by Color</h4></center>
+                    
+                    <label class="btn_a" id="Gender">
+                      <input type="radio" name="colors"> By Gender
+                    </label>
 
-                <label class="btn_a " id="Gender">
-                  <input type="radio" name="options" checked="checked"> By Gender
-                </label>
+                    <br>
 
-                <br>
+                    <label class="btn_a " id="Race">
+                      <input type="radio" name="colors"> By Race
+                    </label>
 
-                <label class="btn_a " id="Race">
-                  <input type="radio" name="options"> By Race
-                </label>
+                    <br>
 
-                <br>
+                    <label class="btn_a " id="Ethnicity">
+                      <input type="radio" name="colors"> By Ethnicity
+                    </label>
 
-                <label class="btn_a " id="Ethnicity">
-                  <input type="radio" name="options"> By Ethnicity
-                </label>
+                    <br>
 
-                <br>
-
-                <label class="btn_a " id="Age_Group">
-                  <input type="radio" name="options"> By Age
-                </label>
+                    <label class="btn_a " id="Age_Group">
+                      <input type="radio" name="colors"> By Age
+                    </label>
 
             </div>
         </div>
@@ -138,23 +207,37 @@
         <hr>
         
         <script>
-      d3.csv('clinic.csv', function (error, data) {
+      d3.csv('data/clinic.csv', function (error, data) {
 
-        var width = 880, height = 880;
-        var widthTop = 350, heightTop = 880; 
+        var width = 880, height = 740;
+        var widthTop = 350, heightTop = 740; 
         var rad = 3;
+          
+        var w = 45; var b = 10;
           
         var genderColor = ["#4169e1", "#ff69b4"];
         var genderLabels = ["Male", "Female"];
           
         var raceColor = ["#377eb8", "#e41a1c", "#4daf4a", "#999999", "#ff7f00", "#f781bf"];
-        var raceLabels = ["White", "Asian", "Black", "Undefined", "American Indian or Alaska Native", "Native Hawaiian or Other Pacific Islander"];
+        var raceLabels = ["White", "Asian", "Black", "Undefined", "American Indian", "Native Hawaiian"];
           
         var ethnicityColor = ["#54278f", "#006d2c", "#999999"];
         var ethnicityLabels = ["Not Hispanic or Latino", "Hispanic or Latino", "Undefined"];
           
         var ageColor = ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f" ]  
         var ageLabels = ["0-12", "13-18", "19-25", "26-45", "46-64", "65+"];
+          
+        genderBarColor = d3.scale.ordinal()
+                        .range(["#4169e1", "#ff69b4"]);
+            
+        raceBarColor = d3.scale.ordinal()
+                        .range(["#377eb8", "#e41a1c", "#4daf4a", "#999999", "#ff7f00", "#f781bf" ]);
+            
+        ethnicityBarColor = d3.scale.ordinal()
+                        .range(["#54278f", "#006d2c", "#999999"]);
+            
+        ageBarColor = d3.scale.ordinal()
+                        .range(["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f" ]);
         
         var countGender = _.countBy(data, function (d) {
            return d.Gender; 
@@ -168,6 +251,40 @@
            return d.Ethnicity.split(' ').join('_'); 
         });
           
+   
+        var WhiteArray = data.filter(function(d) {
+            return d.Race === "White";
+        });
+            
+        var AsianArray = data.filter(function(d) {
+            return d.Race === "Asian";
+        });
+        
+        var BlackArray = data.filter(function(d) {
+            return d.Race === "Black";
+        });
+        
+        var undArray = data.filter(function(d) {
+            return d.Race === "Undefined";
+        });
+        
+        var IndianArray = data.filter(function(d) {
+            return d.Race === "American Indian or Alaska Native";
+        });
+    
+        var HawaiianArray = data.filter(function(d) {
+            return d.Race === "Native Hawaiian or Other Pacific Islander";
+        });
+        
+        var genderTotals = [];
+        var raceTotals = [];
+        var ethnicityTotals =[];
+        var ageTotals = [];
+          
+        genderTotals = [countGender.M, countGender.F];
+        raceTotals = [countRace.White,countRace.Asian,countRace.Black,countRace.Undefined,countRace.American_Indian_or_Alaska_Native,countRace.Native_Hawaiian_or_Other_Pacific_Islander];
+        ethnicityTotals = [countEthnicity.Not_Hispanic_or_Latino, countEthnicity.Hispanic_or_Latino, countEthnicity.Undefined];
+          
         var age1 = 0,
             age2 = 0,
             age3 = 0,
@@ -179,6 +296,23 @@
             .attr("class", "svgTop")
             .attr("width", widthTop)
             .attr("height", heightTop);
+          
+        svgTop.append("text").text("Instructions")
+                                 .attr("text-anchor","middle")
+                                 .attr("font-size","26px").attr("x",175).attr("y",383);
+          
+        svgTop.append("line").attr("x1",0).attr("y1",108).attr("x2",350).attr("y2",108).style("stroke","black").style("stroke-width",3);
+          
+        svgTop.append("line").attr("x1",0).attr("y1",353).attr("x2",350).attr("y2",353).style("stroke","black").style("stroke-width",3);
+          
+        svgTop.append("text").text("Each bubble represents a single patient.").attr("x",10).attr("y",410);
+        svgTop.append("text").text("The size of the bubble represents the").attr("x",10).attr("y",430);
+        svgTop.append("text").text("longevity in years of the patient at the clinic.").attr("x",10).attr("y",450);
+        svgTop.append("text").text("Sort the bubbles by different demographic").attr("x",10).attr("y",470);
+        svgTop.append("text").text("clusters by using the buttons at the top of").attr("x",10).attr("y",490);
+        svgTop.append("text").text("the dashboard. Change the color groupings").attr("x",10).attr("y",510);
+        svgTop.append("text").text("by selecting a button to the left. Mouseover").attr("x",10).attr("y",530);
+        svgTop.append("text").text("a bubble for details about the patient.").attr("x",10).attr("y",550);  
           
         var svg = d3.select(".CenterWrapper").append("svg")
             .attr("class", "svgMain")
@@ -212,6 +346,34 @@
           }
             
         }
+          
+        ageTotals = [age1,age2,age3,age4,age5,age6];
+        
+        function barChart(varname) {
+            var barData = [];
+            var barColor = [];
+            var l; var scale = 0.35;
+            
+            if (varname === "Gender") { barData = genderTotals; barColor = genderBarColor; l=2;}
+            else if (varname === "Race") { barData = raceTotals; barColor = raceBarColor; l=6;}
+            else if (varname === "Ethnicity") { barData = ethnicityTotals; barColor = ethnicityBarColor; l=3;}
+            else if (varname === "Age_Group") { barData = ageTotals; barColor = raceBarColor; l=6;}
+            
+            var start = (widthTop - (w*l + b*(l-1)))/2; 
+            
+            svgTop.selectAll("rect").remove();
+            
+            var bars = svgTop.selectAll("rect")
+                             .data(barData)
+                             .enter().append("rect")
+                             .attr("x",function(d,i) { return start + i*(w+b); })
+                             .attr("y", function(d) { return heightTop - 50 - d*scale; })
+                             .attr("width",w)
+                             .attr("height", function(d) { return d*scale })
+                             .style("fill", "gray")
+                             .style("stroke", "black");
+    
+        }
         
         function sizeLegend() {
             var circleSize = [];
@@ -238,14 +400,14 @@
                 .data(circleText)
                 .enter().append("text")
                 .attr("class", "cLegendLabels")
-                .attr("x", function(d,i) { return 125 + i*30; })
+                .attr("x", function(d,i) { return 120 + i*30; })
                 .attr("y", 58)
                 .attr("text-anchor", "middle")
                 .text(function (d) { return d });
             
             svgTop.append("text").text("Years seen at clinic")
                                  .attr("text-anchor","middle")
-                                 .attr("font-size","18px").attr("x",175).attr("y",30);
+                                 .attr("font-size","26px").attr("x",175).attr("y",30);
   
         }
         
@@ -288,18 +450,25 @@
                     .charge([-15]);
                         
         draw('All');
-        //colorBin('Gender');
         colorLegend('Gender');
         sizeLegend();
 
         $( ".btn" ).click(function() {
           draw(this.id);
+          //barChart(this.id);
         });
           
         $( ".btn_a" ).click(function() {
           colorBin(this.id);   
           colorLegend(this.id);
+          //$(this).toggleClass('active');
         });
+          
+          
+          $('.myButtonLink').click(function() {
+     $(this).css('background-position', '0 0');
+ });
+          
           
         function colorLegend(varname) {
             svgTop.selectAll(".ColorLegend").remove();
@@ -330,22 +499,22 @@
                   .enter().append("circle")
                   .attr("class", "ColorLegend")
                   .attr("r", 10)
-                  .attr("cy", function(d,i) { return 180; })
+                  .attr("cy", function(d,i) { return 168; })
                   .attr("cx", 25)
                   .attr("fill", function(d) { return d });
             
-            colorCircles.transition().duration(500).attr("cy", function(d,i) { return 180 + i*30; })
+            colorCircles.transition().duration(500).attr("cy", function(d,i) { return 168 + i*30; })
             
             var colorText = svgTop.selectAll(".ColorText")
                   .data(colorLabel)
                   .enter().append("text")
                   .attr("class","ColorText")
-                  .attr("y", function(d,i) { return 185; })
+                  .attr("y", function(d,i) { return 176; })
                   .attr("x", 40)
                   .text(function(d) { return d })
-                  .attr("font-size", "14px");
+                  .attr("font-size", "20px");
             
-            colorText.transition().duration(500).attr("y", function(d,i) { return 185 + i*30; })
+            colorText.transition().duration(500).attr("y", function(d,i) { return 176 + i*30; })
             
             var colorName;
             
@@ -355,7 +524,7 @@
             
             svgTop.append("text").text(colorName).attr("id","ColorLegendTitle")
                                  .attr("text-anchor","middle")
-                                 .attr("x",175).attr("y",150).attr("font-size", "18px");
+                                 .attr("x",175).attr("y",138).attr("font-size", "26px");
         }
    
         function colorBin(varname) {
@@ -481,7 +650,7 @@
               .attr("class", "label")
               .text(function (d,i) { return d.name + ": (" + d.count + ")" })
               .attr("transform", function (d) {
-                return "translate(" + (-50 + d.x - ((d.name.length)*4)) + ", " + (d.y - d.r) + ")";
+                return "translate(" + (-77 + d.x - ((d.name.length)*4)) + ", " + (d.y - d.r) + ")";
               });
           } else {
               svg.selectAll(".label")
@@ -489,7 +658,7 @@
               .attr("class", "label")
               .text(function (d,i) { return d.name + ": (" + d.count + ")" })
               .attr("transform", function (d) {
-                return "translate(" + (-50 + d.x - ((d.name.length)*4)) + ", " + (250) + ")";
+                return "translate(" + (-77 + d.x - ((d.name.length)*4)) + ", " + (250) + ")";
               });              
           }
             
@@ -540,6 +709,7 @@
           });
           $(this).popover('show')
         } 
+          
           
           
       });
